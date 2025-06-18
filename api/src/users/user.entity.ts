@@ -1,12 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity()
+@Unique(['login'])
 export class User {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
-
-  @Column()
-  email: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   login: string;

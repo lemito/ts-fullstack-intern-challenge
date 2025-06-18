@@ -1,40 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { UserDTO } from './user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
 import { Repository } from 'typeorm';
-import * as crypto from 'crypto';
+import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private usersRepository: Repository<User>,
   ) {}
 
-  private hashPassword(password: string): string {
-    const hash = crypto.createHash('sha256');
-    hash.update(password);
-    return hash.digest('hex');
-  }
-
-  async addUser(dto: UserDTO): Promise<User> {
-    const { email, login, password } = dto;
-    const existingUser = await this.userRepository.findOne({
+  async create(login: string, password: string): Promise<User> {
+    const existingUser = await this.usersRepository.findOne({
       where: { login },
     });
     if (existingUser) {
-      throw new Error('Пользователь уже существует');
+      throw new Error('User with this login already exists');
     }
 
-    const newpassword = this.hashPassword(password);
+    const user = this.usersRepository.create({ login, password });
+    return this.usersRepository.save(user);
+  }
 
-    const newUser = this.userRepository.create({
-      email,
-      login,
-      password: newpassword,
-    });
+  async findById(id: string): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where: { id } });
+  }
 
-    return await this.userRepository.save(newUser);
+  async findAll(): Promise<User[]> {
+    return this.usersRepository.find();
   }
 }

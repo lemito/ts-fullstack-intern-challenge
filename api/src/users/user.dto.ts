@@ -1,10 +1,8 @@
 export class UserDTO {
-  email: string;
   login: string;
   password: string;
 
-  constructor(email: string, login: string, password: string) {
-    this.email = email;
+  constructor(login: string, password: string) {
     this.login = login;
     this.password = password;
   }

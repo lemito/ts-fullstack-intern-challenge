@@ -1,23 +1,29 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Favorite } from './favorites/favorite.entity';
+import { Like } from './favorites/like.entity';
 import { UsersModule } from './users/users.module';
-import { FavoritesModule } from './favorites/favorites.module';
+import { FavoritesModule } from './favorites/like.module';
+import { AuthModule } from './auth/auth.module';
+import * as dotenv from 'dotenv';
+import { User } from './users/user.entity';
+
+dotenv.config();
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'db',
+      host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'support_lk_db',
-      database: 'catsdb',
-      entities: [Favorite],
+      password: '1',
+      database: 'support_lk_db',
+      entities: [User, Like],
       synchronize: true,
     }),
     UsersModule,
     FavoritesModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
