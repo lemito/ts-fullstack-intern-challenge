@@ -1,4 +1,3 @@
-// import { User } from 'src/users/user.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,8 +6,8 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
-@Entity()
 @Unique('UQ_UserLike', ['catId', 'userId'])
+@Entity()
 export class Like {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -18,9 +17,6 @@ export class Like {
 
   @Column()
   userId: string;
-
-  @Column({ nullable: false })
-  url: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

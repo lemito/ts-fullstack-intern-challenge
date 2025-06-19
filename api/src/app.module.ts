@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Like } from './favorites/like.entity';
+import { Like } from './like/like.entity';
 import { UsersModule } from './users/users.module';
-import { FavoritesModule } from './favorites/like.module';
+import { LikesModule } from './like/like.module';
 import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
 import { User } from './users/user.entity';
@@ -12,7 +12,10 @@ dotenv.config();
 @Module({
   imports: [
     TypeOrmModule.forRoot({
+      cache: false,
+      autoLoadEntities: true,
       type: 'postgres',
+      //   host: 'cat-pinterest-api-pg',
       host: 'localhost',
       port: 5432,
       username: 'postgres',
@@ -20,9 +23,10 @@ dotenv.config();
       database: 'support_lk_db',
       entities: [User, Like],
       synchronize: true,
+      logging: true,
     }),
     UsersModule,
-    FavoritesModule,
+    LikesModule,
     AuthModule,
   ],
   controllers: [],

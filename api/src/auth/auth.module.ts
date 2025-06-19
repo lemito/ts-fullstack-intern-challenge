@@ -11,7 +11,7 @@ import { AuthController } from './auth.controller';
     PassportModule,
     UsersModule,
     JwtModule.register({
-      secret: "meow",
+      secret: 'meow',
       signOptions: { expiresIn: '1h' },
     }),
   ],

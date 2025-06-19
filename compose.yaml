@@ -26,8 +26,9 @@ services:
     environment:
       NODE_ENV: prod
     depends_on:
-      cat-pinterest-api-pg:
-        condition: service_healthy
+      - cat-pinterest-api-pg
+      # cat-pinterest-api-pg:
+      #   condition: service_healthy
 
   cat-pinterest-front:
     container_name: cat-pinterest-front
@@ -49,6 +50,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: support_lk_db
     #      PG_DATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 2s
