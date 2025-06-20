@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CatCard from "./CatCard";
 import styles from "./CatCardGrid.module.css";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || ' http://localhost:8080/api';
 
 interface Like {
   id: string;
@@ -22,14 +22,15 @@ interface CatCardGridProps {
 
 export default function LikedCatsGrid({ userId }: CatCardGridProps) {
   const [likedCats, setLikedCats] = useState<Like[]>([]);
+  console.log(likedCats)
   const [catsDetails, setCatsDetails] = useState<Cat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const extractCatId = (url: string): string => {
-    const match = url.match(/\/([^\/?]+)(\?|$)/);
-    return match ? match[1] : Math.random().toString(36).substring(2, 11);
-  };
+//   const extractCatId = (url: string): string => {
+//     const match = url.match(/\/([^\/?]+)(\?|$)/);
+//     return match ? match[1] : Math.random().toString(36).substring(2, 11);
+//   };
 
   useEffect(() => {
     const fetchLikedCats = async () => {

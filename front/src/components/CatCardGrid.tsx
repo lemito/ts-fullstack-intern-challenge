@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CatCard from "./CatCard";
 import styles from "./CatCardGrid.module.css";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || ' http://localhost:8080/api';
 
 export default function CatCardGrid({ userId }: CatCardGridProps) {
   const [cats, setCats] = useState<Cat[]>([]);
@@ -42,12 +42,12 @@ export default function CatCardGrid({ userId }: CatCardGridProps) {
             const formattedBatch = batchResults.map((cat) => {
               const id = extractCatId(cat.url);
               return {
-                id,
+               id,
                 url: cat.url.startsWith("http")
                   ? cat.url
                   : `https://cataas.com/${cat.url}`,
               };
-            });
+            }); 
 
             loadedCats = [...loadedCats, ...formattedBatch];
             setCats(loadedCats);
