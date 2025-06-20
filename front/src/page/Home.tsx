@@ -1,12 +1,12 @@
-import CatCard from "../components/CatCard";
 import CatCardGrid from "../components/CatCardGrid";
+import useAuth from "../hooks/useAuth";
 
 export default function HomePage() {
+  const { token, isAuthenticated, userId, registerUser, logout } = useAuth();
+  console.log(userId);
   return (
     <>
-      <div>
-        <CatCardGrid userId={null} />
-      </div>
+      <CatCardGrid userId={userId} />
     </>
   );
 }

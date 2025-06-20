@@ -2,13 +2,18 @@ import { useEffect, useState } from "react";
 import CatCard from "./CatCard";
 import styles from "./CatCardGrid.module.css";
 
-
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export default function CatCardGrid({ userId }: CatCardGridProps) {
   const [cats, setCats] = useState<Cat[]>([]);
   const [likes, setLikes] = useState<Like[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const extractCatId = (url: string): string => {
+    const match = url.match(/\/([^\/?]+)(\?|$)/);
+    return match ? match[1] : Math.random().toString(36).substring(2, 11);
+  };
 
   useEffect(() => {
     const fetchCats = async () => {
@@ -33,12 +38,16 @@ export default function CatCardGrid({ userId }: CatCardGridProps) {
               });
 
             const batchResults = await Promise.all(batchPromises);
-            const formattedBatch = batchResults.map((cat) => ({
-              id: cat._id,
-              url: cat.url.startsWith("http")
-                ? cat.url
-                : `https://cataas.com${cat.url}`,
-            }));
+
+            const formattedBatch = batchResults.map((cat) => {
+              const id = extractCatId(cat.url);
+              return {
+                id,
+                url: cat.url.startsWith("http")
+                  ? cat.url
+                  : `https://cataas.com${cat.url}`,
+              };
+            });
 
             loadedCats = [...loadedCats, ...formattedBatch];
             setCats(loadedCats);
@@ -67,7 +76,7 @@ export default function CatCardGrid({ userId }: CatCardGridProps) {
         const token = localStorage.getItem("token");
         if (!token) return;
 
-        const response = await fetch("http://localhost:3000/likes", {
+        const response = await fetch(`${API_URL}/likes`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -87,33 +96,47 @@ export default function CatCardGrid({ userId }: CatCardGridProps) {
 
   async function handleLikeToggle(catId: string) {
     try {
+      console.log("Toggling like for cat ID:", catId);
       const token = localStorage.getItem("token");
-      if (!token) return;
+
+      if (!token || !userId) {
+        console.error("No token or userId found");
+        return;
+      }
 
       const existingLike = likes.find((like) => like.cat_id === catId);
 
       if (existingLike) {
-        // Удаляем лайк
-        await fetch(`http://localhost:3000/likes/${existingLike.id}`, {
+        console.log("Removing like for cat ID:", catId);
+        await fetch(`${API_URL}/likes/${catId}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setLikes(likes.filter((like) => like.id !== existingLike.id));
+        setLikes(likes.filter((like) => like.cat_id !== catId));
       } else {
-        // Добавляем лайк
-        const response = await fetch("http://localhost:3000/likes", {
+        console.log("Adding like for cat ID:", catId);
+        const response = await fetch(`${API_URL}/likes`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ cat_id: catId }),
+          body: JSON.stringify({
+            cat_id: catId,
+            user_id: userId,
+            created_at: new Date().toISOString(),
+          }),
         });
 
-        if (!response.ok) throw new Error("Ошибка добавления лайка");
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Ошибка добавления лайка");
+        }
+
         const newLike: Like = await response.json();
+        console.log("Added new like:", newLike);
         setLikes([...likes, newLike]);
       }
     } catch (err) {
@@ -148,10 +171,10 @@ export default function CatCardGrid({ userId }: CatCardGridProps) {
     <div className={styles.all_cats_container}>
       {cats.map((cat) => (
         <CatCard
-          key={`${cat.id}-${cat.url}`}
+          key={cat.id}
           cat={cat}
           isLiked={likes.some((like) => like.cat_id === cat.id)}
-          onLikeToggle={handleLikeToggle}
+          onLikeToggle={() => handleLikeToggle(cat.id)}
         />
       ))}
     </div>

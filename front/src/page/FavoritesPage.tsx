@@ -1,3 +1,11 @@
+import LikedCatsGrid from "../components/LikedCatsGrid";
+
 export default function FavoritesPage() {
-  return <>Meow Uwu</>;
+  const userid = localStorage.getItem("userId");
+
+  return (
+    <>
+      <LikedCatsGrid userId={userid} />
+    </>
+  );
 }

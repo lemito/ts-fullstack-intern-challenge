@@ -1,8 +1,6 @@
 import { useState } from "react";
 import styles from "./CatCard.module.css";
 
-
-
 const HeartFilledIcon = () => (
   <svg
     width="40"
@@ -53,12 +51,13 @@ export default function CatCard({ cat, isLiked, onLikeToggle }: CatCardProps) {
       className={styles.card}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      data-value={`id=${cat.id};url=${cat.url}`}
     >
       <div className={styles.imageContainer}>
         {!imageError ? (
           <img
             src={cat.url}
-            alt={`Cat ${cat.id}`}
+            alt={`Cat ${cat.url}`}
             className={styles.image}
             onError={handleImageError}
             loading="lazy"

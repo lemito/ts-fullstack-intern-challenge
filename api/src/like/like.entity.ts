@@ -12,10 +12,10 @@ export class Like {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ name: 'cat_id' })
   catId: string;
 
-  @Column()
+  @Column({ name: 'user_id' })
   userId: string;
 
   @CreateDateColumn({ name: 'created_at' })

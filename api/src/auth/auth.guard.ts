@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate {
   }
 
   private async validateToken(token: string): Promise<string | null> {
-    const secretSalt = process.env.SECRET_SALT || 'defaultSecret';
+    const secretSalt = process.env.SECRET_SALT || 'meow';
 
     const users = await this.usersService.findAll();
 

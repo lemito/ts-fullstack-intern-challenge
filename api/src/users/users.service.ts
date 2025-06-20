@@ -22,11 +22,20 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
+  async findByLogin(login: string): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { login } });
+  }
+
   async findById(id: string): Promise<User | undefined> {
     return this.usersRepository.findOne({ where: { id } });
   }
 
   async findAll(): Promise<User[]> {
     return this.usersRepository.find();
+  }
+
+  async validatePassword(user: User, password: string): Promise<boolean> {
+    // TODO:
+    return user.password === password;
   }
 }
