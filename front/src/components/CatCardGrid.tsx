@@ -45,7 +45,7 @@ export default function CatCardGrid({ userId }: CatCardGridProps) {
                 id,
                 url: cat.url.startsWith("http")
                   ? cat.url
-                  : `https://cataas.com${cat.url}`,
+                  : `https://cataas.com/${cat.url}`,
               };
             });
 
