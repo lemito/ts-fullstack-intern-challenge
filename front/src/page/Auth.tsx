@@ -87,7 +87,7 @@ function AuthPage() {
               }}
               className={styles.switchButton}
             >
-              {isRegisterForm ? "Login here" : "Register here"}
+              {isRegisterForm ? "Login" : "Register"}
             </button>
           </p>
         </div>
